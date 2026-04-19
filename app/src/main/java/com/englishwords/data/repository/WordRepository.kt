@@ -58,4 +58,13 @@ class WordRepository(private val wordDao: WordDao) {
     suspend fun getAllEnglishWords(): List<String> {
         return wordDao.getAllEnglishWords()
     }
+    
+    suspend fun getNewWordsCount(): Int {
+        return wordDao.getNewWordsCount()
+    }
+    
+    suspend fun getWordsForReviewCount(): Int {
+        val today = System.currentTimeMillis()
+        return wordDao.getWordsForReviewCount(today)
+    }
 }

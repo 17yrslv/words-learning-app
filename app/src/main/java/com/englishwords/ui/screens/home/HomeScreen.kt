@@ -2,9 +2,7 @@ package com.englishwords.ui.screens.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Brightness4
-import androidx.compose.material.icons.filled.Brightness7
-import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,7 +25,8 @@ fun HomeScreen(
     strings: Strings,
     onNavigateToSetup: () -> Unit,
     onNavigateToAddWord: () -> Unit,
-    onNavigateToStatistics: () -> Unit
+    onNavigateToStatistics: () -> Unit,
+    onNavigateToSettings: () -> Unit
 ) {
     val viewModel: HomeViewModel = viewModel(
         factory = HomeViewModelFactory(repository)
@@ -40,30 +39,24 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(strings.appTitle) },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                languagePreferences.setLanguage(if (language == "en") "ru" else "en")
-                            }
-                        }
+                title = { 
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Language,
-                            contentDescription = if (language == "en") strings.switchToRussian else strings.switchToEnglish
+                        Spacer(modifier = Modifier.width(48.dp))
+                        Text(
+                            text = "Wordy",
+                            style = MaterialTheme.typography.headlineMedium
                         )
                     }
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                themePreferences.setDarkTheme(!isDarkTheme)
-                            }
-                        }
-                    ) {
+                },
+                actions = {
+                    IconButton(onClick = onNavigateToSettings) {
                         Icon(
-                            imageVector = if (isDarkTheme) Icons.Default.Brightness7 else Icons.Default.Brightness4,
-                            contentDescription = if (isDarkTheme) strings.switchToLightTheme else strings.switchToDarkTheme
+                            imageVector = Icons.Default.Settings,
+                            contentDescription = strings.settings
                         )
                     }
                 }

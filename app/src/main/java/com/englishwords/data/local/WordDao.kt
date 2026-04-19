@@ -41,6 +41,12 @@ interface WordDao {
     @Query("SELECT COUNT(*) FROM words WHERE nextReviewDate <= :today")
     suspend fun getReviewCount(today: Long): Int
     
+    @Query("SELECT COUNT(*) FROM words WHERE repetitionLevel = 0")
+    suspend fun getNewWordsCount(): Int
+    
+    @Query("SELECT COUNT(*) FROM words WHERE nextReviewDate <= :today")
+    suspend fun getWordsForReviewCount(today: Long): Int
+    
     @Query("SELECT * FROM words WHERE id = :id")
     suspend fun getWordById(id: Long): Word?
     

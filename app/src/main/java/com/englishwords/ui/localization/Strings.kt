@@ -86,7 +86,15 @@ data class Strings(
     // Session Result - additional
     val totalWordsLabel: String,
     val collapse: String,
-    val expand: String
+    val expand: String,
+    
+    // Settings Screen
+    val settings: String,
+    val theme: String,
+    val darkTheme: String,
+    val lightTheme: String,
+    val language: String,
+    val selectLanguage: String
 )
 
 val EnglishStrings = Strings(
@@ -175,7 +183,15 @@ val EnglishStrings = Strings(
     // Session Result - additional
     totalWordsLabel = "Total words:",
     collapse = "Collapse",
-    expand = "Expand"
+    expand = "Expand",
+    
+    // Settings Screen
+    settings = "Settings",
+    theme = "Theme",
+    darkTheme = "Dark theme",
+    lightTheme = "Light theme",
+    language = "Language",
+    selectLanguage = "Select language"
 )
 
 val RussianStrings = Strings(
@@ -264,7 +280,15 @@ val RussianStrings = Strings(
     // Session Result - additional
     totalWordsLabel = "Всего слов:",
     collapse = "Свернуть",
-    expand = "Развернуть"
+    expand = "Развернуть",
+    
+    // Settings Screen
+    settings = "Настройки",
+    theme = "Тема",
+    darkTheme = "Тёмная тема",
+    lightTheme = "Светлая тема",
+    language = "Язык",
+    selectLanguage = "Выберите язык"
 )
 
 fun getStrings(language: String): Strings {

@@ -20,6 +20,7 @@ import com.englishwords.ui.screens.learning.LearningScreen
 import com.englishwords.ui.screens.result.SessionResultScreen
 import com.englishwords.ui.screens.addword.AddWordScreen
 import com.englishwords.ui.screens.statistics.StatisticsScreen
+import com.englishwords.ui.screens.settings.SettingsScreen
 
 @Composable
 fun NavGraph(
@@ -51,12 +52,16 @@ fun NavGraph(
                 },
                 onNavigateToStatistics = {
                     navController.navigate(Screen.Statistics.route)
+                },
+                onNavigateToSettings = {
+                    navController.navigate(Screen.Settings.route)
                 }
             )
         }
         
         composable(Screen.SessionSetup.route) {
             SessionSetupScreen(
+                repository = repository,
                 strings = strings,
                 onNavigateBack = {
                     navController.popBackStack()
@@ -113,6 +118,17 @@ fun NavGraph(
         composable(Screen.Statistics.route) {
             StatisticsScreen(
                 repository = repository,
+                strings = strings,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        composable(Screen.Settings.route) {
+            SettingsScreen(
+                themePreferences = themePreferences,
+                languagePreferences = languagePreferences,
                 strings = strings,
                 onNavigateBack = {
                     navController.popBackStack()

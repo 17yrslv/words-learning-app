@@ -26,12 +26,25 @@ import com.englishwords.ui.components.AnimatedButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionSetupScreen(
+    repository: com.englishwords.data.repository.WordRepository,
     strings: com.englishwords.ui.localization.Strings,
     onNavigateBack: () -> Unit,
     onStartLearning: (SessionConfig) -> Unit
 ) {
-    val viewModel: SessionSetupViewModel = viewModel()
+    val viewModel: SessionSetupViewModel = viewModel(
+        factory = SessionSetupViewModelFactory(repository)
+    )
     val config by viewModel.config.collectAsState()
+    val validationError by viewModel.validationError.collectAsState()
+    val availableWordsCount by viewModel.availableWordsCount.collectAsState()
+    
+    LaunchedEffect(config.sessionMode) {
+        viewModel.updateAvailableWordsCount()
+    }
+    
+    LaunchedEffect(config.wordCount, availableWordsCount) {
+        viewModel.validateSession()
+    }
     
     Scaffold(
         topBar = {
@@ -147,9 +160,31 @@ fun SessionSetupScreen(
             
             Spacer(modifier = Modifier.weight(1f))
             
+            // Ошибка валидации
+            if (validationError != null) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    )
+                ) {
+                    Text(
+                        text = validationError!!,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+            
             // Кнопка начать
             AnimatedButton(
-                onClick = { onStartLearning(config) },
+                onClick = { 
+                    if (viewModel.validateSession()) {
+                        onStartLearning(config)
+                    }
+                },
+                enabled = validationError == null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp)
@@ -243,8 +278,8 @@ fun AnimatedRadioButton(
         label = "radio_fill"
     )
     
-    val strokeColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-    val fillColor = MaterialTheme.colorScheme.onSurface
+    val strokeColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+    val fillColor = MaterialTheme.colorScheme.primary
     
     Canvas(
         modifier = modifier.size(24.dp)
