@@ -72,6 +72,18 @@ class WordRepository(private val wordDao: WordDao) {
         return wordDao.getAllWords()
     }
     
+    suspend fun getFavoriteWords(limit: Int): List<Word> {
+        return wordDao.getFavoriteWords(limit)
+    }
+    
+    suspend fun getFavoriteWordsCount(): Int {
+        return wordDao.getFavoriteWordsCount()
+    }
+    
+    suspend fun toggleFavorite(word: Word) {
+        wordDao.updateWord(word.copy(isFavorite = !word.isFavorite))
+    }
+    
     suspend fun deleteAll() {
         wordDao.deleteAll()
     }

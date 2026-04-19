@@ -34,6 +34,7 @@ data class Strings(
     val newWords: String,
     val review: String,
     val allWords: String,
+    val favoriteWords: String,
     val start: String,
     
     // Learning Screen
@@ -94,7 +95,12 @@ data class Strings(
     val darkTheme: String,
     val lightTheme: String,
     val language: String,
-    val selectLanguage: String
+    val selectLanguage: String,
+    
+    // Favorites Screen
+    val favorites: String,
+    val noFavorites: String,
+    val removeFromFavorites: String
 )
 
 val EnglishStrings = Strings(
@@ -131,6 +137,7 @@ val EnglishStrings = Strings(
     newWords = "New words",
     review = "Review",
     allWords = "All words",
+    favoriteWords = "Favorite words",
     start = "Start",
     
     // Learning Screen
@@ -191,7 +198,12 @@ val EnglishStrings = Strings(
     darkTheme = "Dark theme",
     lightTheme = "Light theme",
     language = "Language",
-    selectLanguage = "Select language"
+    selectLanguage = "Select language",
+    
+    // Favorites Screen
+    favorites = "Favorites",
+    noFavorites = "No favorite words yet",
+    removeFromFavorites = "Remove from favorites"
 )
 
 val RussianStrings = Strings(
@@ -228,6 +240,7 @@ val RussianStrings = Strings(
     newWords = "Новые слова",
     review = "На повторении",
     allWords = "Все слова",
+    favoriteWords = "Избранные слова",
     start = "Начать",
     
     // Learning Screen
@@ -288,7 +301,12 @@ val RussianStrings = Strings(
     darkTheme = "Тёмная тема",
     lightTheme = "Светлая тема",
     language = "Язык",
-    selectLanguage = "Выберите язык"
+    selectLanguage = "Выберите язык",
+    
+    // Favorites Screen
+    favorites = "Избранные",
+    noFavorites = "Нет избранных слов",
+    removeFromFavorites = "Убрать из избранного"
 )
 
 fun getStrings(language: String): Strings {

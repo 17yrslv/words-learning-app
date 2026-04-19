@@ -47,6 +47,7 @@ class SessionSetupViewModel(
                 SessionMode.NEW_WORDS -> wordRepository.getNewWordsCount()
                 SessionMode.REVIEW -> wordRepository.getWordsForReviewCount()
                 SessionMode.ALL -> wordRepository.getTotalCount()
+                SessionMode.FAVORITES -> wordRepository.getFavoriteWordsCount()
             }
             _availableWordsCount.value = count
             validateSession()

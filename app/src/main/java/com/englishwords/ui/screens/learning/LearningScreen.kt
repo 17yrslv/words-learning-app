@@ -102,7 +102,9 @@ fun LearningScreen(
                 
                 WordCard(
                     word = viewModel.getQuestionText(),
-                    mode = modeText
+                    mode = modeText,
+                    isFavorite = uiState.currentWord?.isFavorite ?: false,
+                    onFavoriteClick = { viewModel.toggleFavorite() }
                 )
                 
                 Spacer(modifier = Modifier.height(8.dp))

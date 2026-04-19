@@ -20,6 +20,9 @@ class GetSessionWordsUseCase(
             SessionMode.ALL -> {
                 repository.getRandomWords(config.wordCount)
             }
+            SessionMode.FAVORITES -> {
+                repository.getFavoriteWords(config.wordCount)
+            }
         }
         
         return words.shuffled()

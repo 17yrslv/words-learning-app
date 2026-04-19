@@ -23,12 +23,6 @@ fun AddWordScreen(
     )
     val uiState by viewModel.uiState.collectAsState()
     
-    LaunchedEffect(uiState.saveSuccess) {
-        if (uiState.saveSuccess) {
-            onNavigateBack()
-        }
-    }
-    
     Scaffold(
         topBar = {
             TopAppBar(

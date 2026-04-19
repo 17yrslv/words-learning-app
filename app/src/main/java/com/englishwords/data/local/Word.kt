@@ -21,6 +21,8 @@ data class Word(
     val incorrectCount: Int = 0,
     val consecutiveCorrect: Int = 0,
     
+    val isFavorite: Boolean = false,
+    
     val createdAt: Long = System.currentTimeMillis()
 ) {
     fun getRussianTranslationsList(): List<String> {

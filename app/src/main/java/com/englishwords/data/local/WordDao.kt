@@ -56,6 +56,12 @@ interface WordDao {
     @Query("SELECT * FROM words ORDER BY createdAt ASC")
     suspend fun getAllWords(): List<Word>
     
+    @Query("SELECT * FROM words WHERE isFavorite = 1 ORDER BY RANDOM() LIMIT :limit")
+    suspend fun getFavoriteWords(limit: Int): List<Word>
+    
+    @Query("SELECT COUNT(*) FROM words WHERE isFavorite = 1")
+    suspend fun getFavoriteWordsCount(): Int
+    
     @Query("DELETE FROM words")
     suspend fun deleteAll()
 }

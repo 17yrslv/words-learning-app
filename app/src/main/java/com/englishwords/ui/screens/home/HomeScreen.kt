@@ -26,7 +26,8 @@ fun HomeScreen(
     onNavigateToSetup: () -> Unit,
     onNavigateToAddWord: () -> Unit,
     onNavigateToStatistics: () -> Unit,
-    onNavigateToSettings: () -> Unit
+    onNavigateToSettings: () -> Unit,
+    onNavigateToFavorites: () -> Unit
 ) {
     val viewModel: HomeViewModel = viewModel(
         factory = HomeViewModelFactory(repository)
@@ -127,6 +128,15 @@ fun HomeScreen(
                         .height(56.dp)
                 ) {
                     Text(strings.statistics, style = MaterialTheme.typography.titleMedium)
+                }
+                
+                OutlinedButton(
+                    onClick = onNavigateToFavorites,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                ) {
+                    Text(strings.favorites, style = MaterialTheme.typography.titleMedium)
                 }
             }
         }

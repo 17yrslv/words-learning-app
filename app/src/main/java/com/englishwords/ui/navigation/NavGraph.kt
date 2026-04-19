@@ -21,6 +21,7 @@ import com.englishwords.ui.screens.result.SessionResultScreen
 import com.englishwords.ui.screens.addword.AddWordScreen
 import com.englishwords.ui.screens.statistics.StatisticsScreen
 import com.englishwords.ui.screens.settings.SettingsScreen
+import com.englishwords.ui.screens.favorites.FavoritesScreen
 
 @Composable
 fun NavGraph(
@@ -55,6 +56,9 @@ fun NavGraph(
                 },
                 onNavigateToSettings = {
                     navController.navigate(Screen.Settings.route)
+                },
+                onNavigateToFavorites = {
+                    navController.navigate(Screen.Favorites.route)
                 }
             )
         }
@@ -93,6 +97,7 @@ fun NavGraph(
         composable(Screen.SessionResult.route) {
             SessionResultScreen(
                 result = sessionResult,
+                repository = repository,
                 strings = strings,
                 onNavigateHome = {
                     navController.popBackStack(Screen.Home.route, inclusive = false)
@@ -130,6 +135,16 @@ fun NavGraph(
                 themePreferences = themePreferences,
                 languagePreferences = languagePreferences,
                 wordRepository = repository,
+                strings = strings,
+                onNavigateBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        
+        composable(Screen.Favorites.route) {
+            FavoritesScreen(
+                repository = repository,
                 strings = strings,
                 onNavigateBack = {
                     navController.popBackStack()

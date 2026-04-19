@@ -270,6 +270,19 @@ class LearningViewModel(
             else -> emptyList()
         }
     }
+    
+    fun toggleFavorite() {
+        val state = _uiState.value
+        val currentWord = state.currentWord ?: return
+        
+        viewModelScope.launch {
+            repository.toggleFavorite(currentWord)
+            // Обновляем слово в списке
+            val updatedWords = state.words.toMutableList()
+            updatedWords[state.currentIndex] = currentWord.copy(isFavorite = !currentWord.isFavorite)
+            _uiState.value = state.copy(words = updatedWords)
+        }
+    }
 }
 
 class LearningViewModelFactory(

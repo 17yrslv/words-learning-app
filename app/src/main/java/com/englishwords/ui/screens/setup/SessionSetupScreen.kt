@@ -156,6 +156,11 @@ fun SessionSetupScreen(
                     selected = config.sessionMode == SessionMode.ALL,
                     onClick = { viewModel.setSessionMode(SessionMode.ALL) }
                 )
+                SessionModeOption(
+                    text = strings.favoriteWords,
+                    selected = config.sessionMode == SessionMode.FAVORITES,
+                    onClick = { viewModel.setSessionMode(SessionMode.FAVORITES) }
+                )
             }
             
             Spacer(modifier = Modifier.weight(1f))
