@@ -67,4 +67,12 @@ class WordRepository(private val wordDao: WordDao) {
         val today = System.currentTimeMillis()
         return wordDao.getWordsForReviewCount(today)
     }
+    
+    suspend fun getAllWords(): List<Word> {
+        return wordDao.getAllWords()
+    }
+    
+    suspend fun deleteAll() {
+        wordDao.deleteAll()
+    }
 }

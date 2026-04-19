@@ -36,6 +36,11 @@ fun HomeScreen(
     val language by languagePreferences.language.collectAsState(initial = "en")
     val scope = rememberCoroutineScope()
     
+    // Обновляем статистику при каждом возврате на экран
+    LaunchedEffect(Unit) {
+        viewModel.loadStatistics()
+    }
+    
     Scaffold(
         topBar = {
             TopAppBar(

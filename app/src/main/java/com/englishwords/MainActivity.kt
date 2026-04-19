@@ -67,10 +67,18 @@ class MainActivity : ComponentActivity() {
                     
                     LaunchedEffect(Unit) {
                         try {
-                            // Всегда проверяем и импортируем новые слова из CSV
-                            val count = csvImporter.importWordsFromCsv()
-                            if (count > 0) {
-                                println("Imported $count new words from CSV")
+                            // Проверяем, был ли уже выполнен первоначальный импорт
+                            val prefs = getSharedPreferences("app_prefs", MODE_PRIVATE)
+                            val isFirstLaunch = !prefs.getBoolean("initial_import_done", false)
+                            
+                            if (isFirstLaunch) {
+                                // Импортируем слова только при первом запуске
+                                val count = csvImporter.importWordsFromCsv()
+                                if (count > 0) {
+                                    println("Imported $count new words from CSV")
+                                }
+                                // Отмечаем, что импорт выполнен
+                                prefs.edit().putBoolean("initial_import_done", true).apply()
                             }
                             isImporting = false
                         } catch (e: Exception) {

@@ -129,6 +129,7 @@ fun NavGraph(
             SettingsScreen(
                 themePreferences = themePreferences,
                 languagePreferences = languagePreferences,
+                wordRepository = repository,
                 strings = strings,
                 onNavigateBack = {
                     navController.popBackStack()

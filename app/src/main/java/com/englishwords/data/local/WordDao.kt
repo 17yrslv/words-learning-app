@@ -53,6 +53,9 @@ interface WordDao {
     @Query("SELECT englishWord FROM words")
     suspend fun getAllEnglishWords(): List<String>
     
+    @Query("SELECT * FROM words ORDER BY createdAt ASC")
+    suspend fun getAllWords(): List<Word>
+    
     @Query("DELETE FROM words")
     suspend fun deleteAll()
 }
