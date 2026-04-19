@@ -73,10 +73,7 @@ class MainActivity : ComponentActivity() {
                             
                             if (isFirstLaunch) {
                                 // Импортируем слова только при первом запуске
-                                val count = csvImporter.importWordsFromCsv()
-                                if (count > 0) {
-                                    println("Imported $count new words from CSV")
-                                }
+                                csvImporter.importWordsFromCsv()
                                 // Отмечаем, что импорт выполнен
                                 prefs.edit().putBoolean("initial_import_done", true).apply()
                             }

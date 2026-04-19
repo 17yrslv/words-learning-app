@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-    <include domain="database" path="." />
+    <!-- Exclude sensitive data from backup -->
+    <exclude domain="sharedpref" path="app_prefs.xml" />
+    <exclude domain="database" path="word_database" />
+    <exclude domain="database" path="word_database-shm" />
+    <exclude domain="database" path="word_database-wal" />
+    
+    <!-- Include only DataStore preferences (theme and language settings) -->
+    <include domain="sharedpref" path="datastore" />
 </full-backup-content>
