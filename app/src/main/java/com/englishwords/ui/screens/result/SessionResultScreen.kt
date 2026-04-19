@@ -20,11 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.englishwords.domain.model.SessionResult
 import com.englishwords.domain.model.WordError
+import com.englishwords.ui.components.AnimatedButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionResultScreen(
     result: SessionResult?,
+    strings: com.englishwords.ui.localization.Strings,
     onNavigateHome: () -> Unit,
     onRepeatErrors: () -> Unit
 ) {
@@ -34,7 +36,7 @@ fun SessionResultScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Результаты сессии") }
+                title = { Text(strings.sessionResults) }
             )
         }
     ) { paddingValues ->
@@ -49,9 +51,9 @@ fun SessionResultScreen(
                 item {
                     // Заголовок
                     Text(
-                        text = if (sessionResult.accuracy >= 80) "🎉 Отличная работа!" 
-                              else if (sessionResult.accuracy >= 60) "👍 Хорошо!" 
-                              else "💪 Продолжай практиковаться!",
+                        text = if (sessionResult.accuracy >= 80) strings.excellentWork 
+                              else if (sessionResult.accuracy >= 60) strings.goodWork 
+                              else strings.keepPracticing,
                         style = MaterialTheme.typography.headlineMedium
                     )
                 }
@@ -66,7 +68,7 @@ fun SessionResultScreen(
                             verticalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             Text(
-                                text = "Статистика сессии",
+                                text = strings.sessionStats,
                                 style = MaterialTheme.typography.titleLarge
                             )
                             
@@ -77,7 +79,7 @@ fun SessionResultScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = "Всего слов:",
+                                    text = strings.totalWordsLabel,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                                 Text(
@@ -92,13 +94,13 @@ fun SessionResultScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = "✅ Правильно:",
+                                    text = strings.correct,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                                 Text(
                                     text = "${sessionResult.correctAnswers}",
                                     style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.primary
+                                    color = androidx.compose.ui.graphics.Color(0xFF4CAF50)
                                 )
                             }
                             
@@ -107,7 +109,7 @@ fun SessionResultScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = "❌ Неправильно:",
+                                    text = strings.incorrect,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                                 Text(
@@ -128,7 +130,7 @@ fun SessionResultScreen(
                             )
                             
                             Text(
-                                text = "Точность: ${sessionResult.accuracy}%",
+                                text = "${strings.accuracy} ${sessionResult.accuracy}%",
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                             )
@@ -152,12 +154,12 @@ fun SessionResultScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "✅ Правильные слова (${sessionResult.correctWords.size})",
+                                    text = "${strings.correctWords} (${sessionResult.correctWords.size})",
                                     style = MaterialTheme.typography.titleMedium
                                 )
                                 Icon(
                                     imageVector = if (showCorrectWords) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                                    contentDescription = if (showCorrectWords) "Свернуть" else "Развернуть"
+                                    contentDescription = if (showCorrectWords) strings.collapse else strings.expand
                                 )
                             }
                         }
@@ -206,12 +208,12 @@ fun SessionResultScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "❌ Неправильные слова (${sessionResult.wordsWithErrors.size})",
+                                    text = "${strings.incorrectWords} (${sessionResult.wordsWithErrors.size})",
                                     style = MaterialTheme.typography.titleMedium
                                 )
                                 Icon(
                                     imageVector = if (showIncorrectWords) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                                    contentDescription = if (showIncorrectWords) "Свернуть" else "Развернуть"
+                                    contentDescription = if (showIncorrectWords) strings.collapse else strings.expand
                                 )
                             }
                         }
@@ -234,12 +236,12 @@ fun SessionResultScreen(
                                         style = MaterialTheme.typography.bodyLarge
                                     )
                                     Text(
-                                        text = "Правильно: ${wordError.correctAnswers.firstOrNull() ?: ""}",
+                                        text = "${strings.correctAnswer} ${wordError.correctAnswers.firstOrNull() ?: ""}",
                                         style = MaterialTheme.typography.bodyMedium,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                     Text(
-                                        text = "Ваш ответ: ${wordError.userAnswer}",
+                                        text = "${strings.yourAnswer} ${wordError.userAnswer}",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.error
                                     )
@@ -254,20 +256,20 @@ fun SessionResultScreen(
                                     .fillMaxWidth()
                                     .height(56.dp)
                             ) {
-                                Text("Повторить ошибки")
+                                Text(strings.repeatErrors)
                             }
                         }
                     }
                 }
                 
                 item {
-                    Button(
+                    AnimatedButton(
                         onClick = onNavigateHome,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(56.dp)
                     ) {
-                        Text("На главную")
+                        Text(strings.home)
                     }
                 }
             }
@@ -278,7 +280,7 @@ fun SessionResultScreen(
                     .padding(paddingValues),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Нет данных о результатах")
+                Text(strings.noResultsData)
             }
         }
     }

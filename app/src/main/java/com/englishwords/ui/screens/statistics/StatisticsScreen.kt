@@ -15,6 +15,7 @@ import com.englishwords.data.repository.WordRepository
 @Composable
 fun StatisticsScreen(
     repository: WordRepository,
+    strings: com.englishwords.ui.localization.Strings,
     onNavigateBack: () -> Unit
 ) {
     val viewModel: StatisticsViewModel = viewModel(
@@ -25,10 +26,10 @@ fun StatisticsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Статистика") },
+                title = { Text(strings.statistics) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = strings.back)
                     }
                 }
             )
@@ -60,16 +61,16 @@ fun StatisticsScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = "📊 Общая статистика",
+                            text = strings.generalStats,
                             style = MaterialTheme.typography.titleLarge
                         )
                         
                         Divider()
                         
-                        StatRow("Всего слов:", uiState.totalWords.toString())
-                        StatRow("Изучается:", uiState.learningWords.toString())
-                        StatRow("Выучено:", uiState.learnedWords.toString())
-                        StatRow("На повторении:", uiState.reviewWords.toString())
+                        StatRow(strings.totalWords, uiState.totalWords.toString())
+                        StatRow(strings.learning, uiState.learningWords.toString())
+                        StatRow(strings.learned, uiState.learnedWords.toString())
+                        StatRow(strings.onReview, uiState.reviewWords.toString())
                     }
                 }
                 
@@ -82,7 +83,7 @@ fun StatisticsScreen(
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = "📈 Прогресс изучения",
+                            text = strings.learningProgress,
                             style = MaterialTheme.typography.titleLarge
                         )
                         
@@ -103,7 +104,7 @@ fun StatisticsScreen(
                         )
                         
                         Text(
-                            text = "Изучено ${uiState.learnedWords + uiState.learningWords} из ${uiState.totalWords} слов",
+                            text = "${strings.learnedProgress} ${uiState.learnedWords + uiState.learningWords} из ${uiState.totalWords} слов",
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
@@ -119,19 +120,19 @@ fun StatisticsScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "ℹ️ Информация",
+                            text = strings.information,
                             style = MaterialTheme.typography.titleMedium
                         )
                         
                         Divider()
                         
                         Text(
-                            text = "Система интервальных повторений помогает эффективно запоминать слова.",
+                            text = strings.spacedRepetitionInfo,
                             style = MaterialTheme.typography.bodySmall
                         )
                         
                         Text(
-                            text = "Слова проходят через 6 уровней запоминания с интервалами: 0, 1, 3, 7, 14, 30 дней.",
+                            text = strings.levelsInfo,
                             style = MaterialTheme.typography.bodySmall
                         )
                     }

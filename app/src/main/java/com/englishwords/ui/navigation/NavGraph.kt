@@ -8,10 +8,12 @@ import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.englishwords.data.preferences.LanguagePreferences
 import com.englishwords.data.preferences.ThemePreferences
 import com.englishwords.data.repository.WordRepository
 import com.englishwords.domain.model.SessionConfig
 import com.englishwords.domain.model.SessionResult
+import com.englishwords.ui.localization.Strings
 import com.englishwords.ui.screens.home.HomeScreen
 import com.englishwords.ui.screens.setup.SessionSetupScreen
 import com.englishwords.ui.screens.learning.LearningScreen
@@ -23,7 +25,9 @@ import com.englishwords.ui.screens.statistics.StatisticsScreen
 fun NavGraph(
     navController: NavHostController,
     repository: WordRepository,
-    themePreferences: ThemePreferences
+    themePreferences: ThemePreferences,
+    languagePreferences: LanguagePreferences,
+    strings: Strings
 ) {
     // Храним конфигурацию сессии и результаты
     var sessionConfig by remember { mutableStateOf(SessionConfig()) }
@@ -37,6 +41,8 @@ fun NavGraph(
             HomeScreen(
                 repository = repository,
                 themePreferences = themePreferences,
+                languagePreferences = languagePreferences,
+                strings = strings,
                 onNavigateToSetup = {
                     navController.navigate(Screen.SessionSetup.route)
                 },
@@ -51,6 +57,7 @@ fun NavGraph(
         
         composable(Screen.SessionSetup.route) {
             SessionSetupScreen(
+                strings = strings,
                 onNavigateBack = {
                     navController.popBackStack()
                 },
@@ -65,6 +72,7 @@ fun NavGraph(
             LearningScreen(
                 repository = repository,
                 config = sessionConfig,
+                strings = strings,
                 onNavigateBack = {
                     navController.popBackStack(Screen.Home.route, inclusive = false)
                 },
@@ -80,6 +88,7 @@ fun NavGraph(
         composable(Screen.SessionResult.route) {
             SessionResultScreen(
                 result = sessionResult,
+                strings = strings,
                 onNavigateHome = {
                     navController.popBackStack(Screen.Home.route, inclusive = false)
                 },
@@ -94,6 +103,7 @@ fun NavGraph(
         composable(Screen.AddWord.route) {
             AddWordScreen(
                 repository = repository,
+                strings = strings,
                 onNavigateBack = {
                     navController.popBackStack()
                 }
@@ -103,6 +113,7 @@ fun NavGraph(
         composable(Screen.Statistics.route) {
             StatisticsScreen(
                 repository = repository,
+                strings = strings,
                 onNavigateBack = {
                     navController.popBackStack()
                 }

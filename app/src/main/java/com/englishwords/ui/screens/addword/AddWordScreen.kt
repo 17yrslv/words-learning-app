@@ -9,11 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.englishwords.data.repository.WordRepository
+import com.englishwords.ui.components.AnimatedButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddWordScreen(
     repository: WordRepository,
+    strings: com.englishwords.ui.localization.Strings,
     onNavigateBack: () -> Unit
 ) {
     val viewModel: AddWordViewModel = viewModel(
@@ -30,10 +32,10 @@ fun AddWordScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Добавить слово") },
+                title = { Text(strings.addWordTitle) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = strings.back)
                     }
                 }
             )
@@ -50,7 +52,7 @@ fun AddWordScreen(
             OutlinedTextField(
                 value = uiState.englishWord,
                 onValueChange = { viewModel.onEnglishWordChange(it) },
-                label = { Text("Английское слово") },
+                label = { Text(strings.englishWord) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 enabled = !uiState.isSaving
@@ -60,8 +62,8 @@ fun AddWordScreen(
             OutlinedTextField(
                 value = uiState.russianTranslations,
                 onValueChange = { viewModel.onRussianTranslationsChange(it) },
-                label = { Text("Русские переводы") },
-                supportingText = { Text("Через запятую") },
+                label = { Text(strings.russianTranslations) },
+                supportingText = { Text(strings.separateByComma) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 2,
                 enabled = !uiState.isSaving
@@ -79,7 +81,7 @@ fun AddWordScreen(
             Spacer(modifier = Modifier.weight(1f))
             
             // Кнопка сохранить
-            Button(
+            AnimatedButton(
                 onClick = { viewModel.saveWord() },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -92,7 +94,7 @@ fun AddWordScreen(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 } else {
-                    Text("Сохранить")
+                    Text(strings.save)
                 }
             }
         }

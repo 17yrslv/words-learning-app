@@ -21,12 +21,14 @@ import com.englishwords.ui.screens.learning.components.AnswerInput
 import com.englishwords.ui.screens.learning.components.MultipleChoiceOptions
 import com.englishwords.ui.screens.learning.components.ResultCard
 import com.englishwords.ui.screens.learning.components.WordCard
+import com.englishwords.ui.components.AnimatedButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LearningScreen(
     repository: WordRepository,
     config: SessionConfig,
+    strings: com.englishwords.ui.localization.Strings,
     onNavigateBack: () -> Unit,
     onSessionComplete: (SessionResult) -> Unit
 ) {
@@ -47,7 +49,7 @@ fun LearningScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text("Обучение")
+                        Text(strings.learningTitle)
                         if (!uiState.isLoading) {
                             Text(
                                 text = uiState.progressText,
@@ -58,7 +60,7 @@ fun LearningScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.Close, contentDescription = "Выход")
+                        Icon(Icons.Default.Close, contentDescription = strings.exit)
                     }
                 }
             )
@@ -118,14 +120,14 @@ fun LearningScreen(
                             Spacer(modifier = Modifier.height(16.dp))
                             
                             // Кнопка проверить
-                            Button(
+                            AnimatedButton(
                                 onClick = { viewModel.checkAnswer() },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(56.dp),
                                 enabled = uiState.userAnswer.isNotBlank()
                             ) {
-                                Text("Проверить", style = MaterialTheme.typography.titleMedium)
+                                Text(strings.check, style = MaterialTheme.typography.titleMedium)
                             }
                             
                             // Дополнительное пространство снизу для клавиатуры
@@ -161,13 +163,13 @@ fun LearningScreen(
                             
                             Spacer(modifier = Modifier.height(16.dp))
                             
-                            Button(
+                            AnimatedButton(
                                 onClick = { viewModel.nextWord() },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(56.dp)
                             ) {
-                                Text("Далее", style = MaterialTheme.typography.titleMedium)
+                                Text(strings.next, style = MaterialTheme.typography.titleMedium)
                             }
                         }
                     }

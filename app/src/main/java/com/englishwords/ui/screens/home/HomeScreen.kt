@@ -4,14 +4,18 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brightness4
 import androidx.compose.material.icons.filled.Brightness7
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.englishwords.data.preferences.LanguagePreferences
 import com.englishwords.data.preferences.ThemePreferences
 import com.englishwords.data.repository.WordRepository
+import com.englishwords.ui.components.AnimatedButton
+import com.englishwords.ui.localization.Strings
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -19,6 +23,8 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     repository: WordRepository,
     themePreferences: ThemePreferences,
+    languagePreferences: LanguagePreferences,
+    strings: Strings,
     onNavigateToSetup: () -> Unit,
     onNavigateToAddWord: () -> Unit,
     onNavigateToStatistics: () -> Unit
@@ -28,13 +34,26 @@ fun HomeScreen(
     )
     val uiState by viewModel.uiState.collectAsState()
     val isDarkTheme by themePreferences.isDarkTheme.collectAsState(initial = true)
+    val language by languagePreferences.language.collectAsState(initial = "en")
     val scope = rememberCoroutineScope()
     
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("English Words Learning") },
+                title = { Text(strings.appTitle) },
                 actions = {
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                languagePreferences.setLanguage(if (language == "en") "ru" else "en")
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Language,
+                            contentDescription = if (language == "en") strings.switchToRussian else strings.switchToEnglish
+                        )
+                    }
                     IconButton(
                         onClick = {
                             scope.launch {
@@ -44,7 +63,7 @@ fun HomeScreen(
                     ) {
                         Icon(
                             imageVector = if (isDarkTheme) Icons.Default.Brightness7 else Icons.Default.Brightness4,
-                            contentDescription = if (isDarkTheme) "Переключить на светлую тему" else "Переключить на тёмную тему"
+                            contentDescription = if (isDarkTheme) strings.switchToLightTheme else strings.switchToDarkTheme
                         )
                     }
                 }
@@ -71,27 +90,27 @@ fun HomeScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Статистика",
+                            text = strings.statistics,
                             style = MaterialTheme.typography.titleLarge
                         )
                         
-                        StatRow("Всего слов:", uiState.totalWords.toString())
-                        StatRow("Изучается:", uiState.learningWords.toString())
-                        StatRow("Выучено:", uiState.learnedWords.toString())
-                        StatRow("На повторении сегодня:", uiState.reviewWords.toString())
+                        StatRow(strings.totalWords, uiState.totalWords.toString())
+                        StatRow(strings.learning, uiState.learningWords.toString())
+                        StatRow(strings.learned, uiState.learnedWords.toString())
+                        StatRow(strings.reviewToday, uiState.reviewWords.toString())
                     }
                 }
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 // Кнопки
-                Button(
+                AnimatedButton(
                     onClick = onNavigateToSetup,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
                 ) {
-                    Text("🎯 Начать обучение", style = MaterialTheme.typography.titleMedium)
+                    Text(strings.startLearning, style = MaterialTheme.typography.titleMedium)
                 }
                 
                 OutlinedButton(
@@ -100,7 +119,7 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .height(56.dp)
                 ) {
-                    Text("➕ Добавить слово", style = MaterialTheme.typography.titleMedium)
+                    Text(strings.addWord, style = MaterialTheme.typography.titleMedium)
                 }
                 
                 OutlinedButton(
@@ -109,7 +128,7 @@ fun HomeScreen(
                         .fillMaxWidth()
                         .height(56.dp)
                 ) {
-                    Text("📈 Статистика", style = MaterialTheme.typography.titleMedium)
+                    Text(strings.statistics, style = MaterialTheme.typography.titleMedium)
                 }
             }
         }
