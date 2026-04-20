@@ -18,13 +18,12 @@
 # Hide the original source file name
 -renamesourcefileattribute SourceFile
 
-# Keep Room entities and DAOs
--keep class com.englishwords.data.local.** { *; }
--keepclassmembers class com.englishwords.data.local.** { *; }
-
-# Keep Compose
--keep class androidx.compose.** { *; }
--dontwarn androidx.compose.**
+# Keep Room entities and DAOs - only what's necessary
+-keep class com.englishwords.data.local.Word { *; }
+-keep class com.englishwords.data.local.Space { *; }
+-keep class com.englishwords.data.local.WordStatistics { *; }
+-keep interface com.englishwords.data.local.WordDao { *; }
+-keep interface com.englishwords.data.local.SpaceDao { *; }
 
 # Keep Kotlin Coroutines
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
@@ -35,10 +34,6 @@
 
 # Keep DataStore
 -keep class androidx.datastore.*.** { *; }
-
-# Keep Navigation
--keep class androidx.navigation.** { *; }
--keepnames class androidx.navigation.** { *; }
 
 # Remove logging in release builds
 -assumenosideeffects class android.util.Log {

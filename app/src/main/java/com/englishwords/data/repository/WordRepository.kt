@@ -4,6 +4,7 @@ import com.englishwords.data.local.Space
 import com.englishwords.data.local.SpaceDao
 import com.englishwords.data.local.Word
 import com.englishwords.data.local.WordDao
+import com.englishwords.data.local.WordStatistics
 import kotlinx.coroutines.flow.Flow
 
 class WordRepository(
@@ -55,6 +56,12 @@ class WordRepository(
     suspend fun getReviewCount(spaceId: Long): Int {
         val today = System.currentTimeMillis()
         return wordDao.getReviewCount(spaceId, today)
+    }
+    
+    // Оптимизированный метод для получения всей статистики за один запрос
+    suspend fun getStatistics(spaceId: Long): WordStatistics {
+        val today = System.currentTimeMillis()
+        return wordDao.getStatistics(spaceId, today)
     }
     
     suspend fun getWordById(id: Long): Word? {

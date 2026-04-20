@@ -104,7 +104,7 @@ class LearningViewModel(
     private fun determineCurrentMode(): LearningMode {
         return when (config.learningMode) {
             LearningMode.MIXED -> {
-                if (Math.random() < 0.5) LearningMode.EN_TO_RU else LearningMode.RU_TO_EN
+                if (kotlin.random.Random.nextBoolean()) LearningMode.EN_TO_RU else LearningMode.RU_TO_EN
             }
             else -> config.learningMode
         }

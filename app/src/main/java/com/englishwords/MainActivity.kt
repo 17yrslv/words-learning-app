@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
         spacePreferences = SpacePreferences(applicationContext)
         
         setContent {
-            val isDarkTheme by themePreferences.isDarkTheme.collectAsState(initial = true)
+            val isDarkTheme by themePreferences.isDarkTheme.collectAsState(initial = false)
             val language by languagePreferences.language.collectAsState(initial = "en")
             val strings = remember(language) { getStrings(language) }
             

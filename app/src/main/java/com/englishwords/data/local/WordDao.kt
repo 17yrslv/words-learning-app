@@ -6,6 +6,13 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
+data class WordStatistics(
+    val total: Int,
+    val learned: Int,
+    val learning: Int,
+    val review: Int
+)
+
 @Dao
 interface WordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -40,6 +47,18 @@ interface WordDao {
     
     @Query("SELECT COUNT(*) FROM words WHERE spaceId = :spaceId AND nextReviewDate <= :today")
     suspend fun getReviewCount(spaceId: Long, today: Long): Int
+    
+    // Оптимизированный запрос для получения всей статистики за один раз
+    @Query("""
+        SELECT 
+            COUNT(*) as total,
+            SUM(CASE WHEN repetitionLevel >= 5 THEN 1 ELSE 0 END) as learned,
+            SUM(CASE WHEN repetitionLevel > 0 AND repetitionLevel < 5 THEN 1 ELSE 0 END) as learning,
+            SUM(CASE WHEN nextReviewDate <= :today THEN 1 ELSE 0 END) as review
+        FROM words 
+        WHERE spaceId = :spaceId
+    """)
+    suspend fun getStatistics(spaceId: Long, today: Long): WordStatistics
     
     @Query("SELECT COUNT(*) FROM words WHERE spaceId = :spaceId AND repetitionLevel = 0")
     suspend fun getNewWordsCount(spaceId: Long): Int

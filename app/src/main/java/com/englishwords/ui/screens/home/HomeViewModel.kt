@@ -9,6 +9,8 @@ import com.englishwords.data.repository.WordRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class HomeUiState(
@@ -73,16 +75,14 @@ class HomeViewModel(
             
             val currentSpaceId = _uiState.value.currentSpace?.id ?: 1L
             
-            val total = repository.getTotalCount(currentSpaceId)
-            val learned = repository.getLearnedCount(currentSpaceId)
-            val learning = repository.getLearningCount(currentSpaceId)
-            val review = repository.getReviewCount(currentSpaceId)
+            // Оптимизированный запрос - получаем всю статистику за один раз
+            val stats = repository.getStatistics(currentSpaceId)
             
             _uiState.value = _uiState.value.copy(
-                totalWords = total,
-                learnedWords = learned,
-                learningWords = learning,
-                reviewWords = review,
+                totalWords = stats.total,
+                learnedWords = stats.learned,
+                learningWords = stats.learning,
+                reviewWords = stats.review,
                 isLoading = false
             )
         }

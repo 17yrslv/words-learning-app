@@ -56,6 +56,13 @@ abstract class WordDatabase : RoomDatabase() {
                     "word_database"
                 )
                 .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                .addCallback(object : RoomDatabase.Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        super.onCreate(db)
+                        // Создаем пространство по умолчанию при первом создании базы данных
+                        db.execSQL("INSERT INTO spaces (id, name, shortName, createdAt) VALUES (1, 'English', 'EN', ${System.currentTimeMillis()})")
+                    }
+                })
                 .build()
                 INSTANCE = instance
                 instance
