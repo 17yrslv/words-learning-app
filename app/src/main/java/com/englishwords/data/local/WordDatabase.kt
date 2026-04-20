@@ -7,9 +7,10 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Word::class], version = 2, exportSchema = false)
+@Database(entities = [Word::class, Space::class], version = 3, exportSchema = false)
 abstract class WordDatabase : RoomDatabase() {
     abstract fun wordDao(): WordDao
+    abstract fun spaceDao(): SpaceDao
     
     companion object {
         @Volatile
@@ -21,6 +22,25 @@ abstract class WordDatabase : RoomDatabase() {
             }
         }
         
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Создаем таблицу пространств
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS spaces (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        name TEXT NOT NULL,
+                        createdAt INTEGER NOT NULL
+                    )
+                """)
+                
+                // Создаем пространство по умолчанию
+                database.execSQL("INSERT INTO spaces (id, name, createdAt) VALUES (1, 'English', ${System.currentTimeMillis()})")
+                
+                // Добавляем колонку spaceId в таблицу words
+                database.execSQL("ALTER TABLE words ADD COLUMN spaceId INTEGER NOT NULL DEFAULT 1")
+            }
+        }
+        
         fun getDatabase(context: Context): WordDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -28,7 +48,7 @@ abstract class WordDatabase : RoomDatabase() {
                     WordDatabase::class.java,
                     "word_database"
                 )
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                 .build()
                 INSTANCE = instance
                 instance

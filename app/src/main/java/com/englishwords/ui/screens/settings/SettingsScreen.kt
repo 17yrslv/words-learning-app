@@ -31,13 +31,14 @@ import kotlinx.coroutines.launch
 fun SettingsScreen(
     themePreferences: ThemePreferences,
     languagePreferences: LanguagePreferences,
+    spacePreferences: com.englishwords.data.preferences.SpacePreferences,
     wordRepository: WordRepository,
     strings: Strings,
     onNavigateBack: () -> Unit
 ) {
     val context = LocalContext.current
     val viewModel: SettingsViewModel = viewModel(
-        factory = SettingsViewModelFactory(themePreferences, languagePreferences, wordRepository, context)
+        factory = SettingsViewModelFactory(themePreferences, languagePreferences, spacePreferences, wordRepository, context)
     )
     val isDarkTheme by viewModel.isDarkTheme.collectAsState()
     val currentLanguage by viewModel.currentLanguage.collectAsState()

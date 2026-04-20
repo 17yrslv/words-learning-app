@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.englishwords.data.csv.CsvImporter
 import com.englishwords.data.local.WordDatabase
 import com.englishwords.data.preferences.LanguagePreferences
+import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.preferences.ThemePreferences
 import com.englishwords.data.repository.WordRepository
 import com.englishwords.ui.localization.getStrings
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var csvImporter: CsvImporter
     private lateinit var themePreferences: ThemePreferences
     private lateinit var languagePreferences: LanguagePreferences
+    private lateinit var spacePreferences: SpacePreferences
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +41,11 @@ class MainActivity : ComponentActivity() {
         
         // Инициализация базы данных и репозитория
         val database = WordDatabase.getDatabase(applicationContext)
-        repository = WordRepository(database.wordDao())
+        repository = WordRepository(database.wordDao(), database.spaceDao())
         csvImporter = CsvImporter(applicationContext, repository)
         themePreferences = ThemePreferences(applicationContext)
         languagePreferences = LanguagePreferences(applicationContext)
+        spacePreferences = SpacePreferences(applicationContext)
         
         setContent {
             val isDarkTheme by themePreferences.isDarkTheme.collectAsState(initial = true)
@@ -127,6 +130,7 @@ class MainActivity : ComponentActivity() {
                                 repository = repository,
                                 themePreferences = themePreferences,
                                 languagePreferences = languagePreferences,
+                                spacePreferences = spacePreferences,
                                 strings = strings
                             )
                         }

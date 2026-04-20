@@ -4,14 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.englishwords.data.local.Word
+import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.repository.WordRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class FavoritesViewModel(
-    private val repository: WordRepository
+    private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences
 ) : ViewModel() {
     
     private val _favoriteWords = MutableStateFlow<List<Word>>(emptyList())
@@ -23,8 +26,9 @@ class FavoritesViewModel(
     fun loadFavoriteWords() {
         viewModelScope.launch {
             _isLoading.value = true
-            val count = repository.getFavoriteWordsCount()
-            val words = repository.getFavoriteWords(count)
+            val spaceId = spacePreferences.currentSpaceId.first()
+            val count = repository.getFavoriteWordsCount(spaceId)
+            val words = repository.getFavoriteWords(spaceId, count)
             _favoriteWords.value = words
             _isLoading.value = false
         }
@@ -39,12 +43,13 @@ class FavoritesViewModel(
 }
 
 class FavoritesViewModelFactory(
-    private val repository: WordRepository
+    private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(FavoritesViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return FavoritesViewModel(repository) as T
+            return FavoritesViewModel(repository, spacePreferences) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

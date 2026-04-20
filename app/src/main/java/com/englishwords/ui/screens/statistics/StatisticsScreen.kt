@@ -15,11 +15,12 @@ import com.englishwords.data.repository.WordRepository
 @Composable
 fun StatisticsScreen(
     repository: WordRepository,
+    spacePreferences: com.englishwords.data.preferences.SpacePreferences,
     strings: com.englishwords.ui.localization.Strings,
     onNavigateBack: () -> Unit
 ) {
     val viewModel: StatisticsViewModel = viewModel(
-        factory = StatisticsViewModelFactory(repository)
+        factory = StatisticsViewModelFactory(repository, spacePreferences)
     )
     val uiState by viewModel.uiState.collectAsState()
     

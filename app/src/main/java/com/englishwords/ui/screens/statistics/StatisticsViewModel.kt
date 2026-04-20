@@ -3,10 +3,12 @@ package com.englishwords.ui.screens.statistics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.repository.WordRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class StatisticsUiState(
@@ -19,7 +21,8 @@ data class StatisticsUiState(
 )
 
 class StatisticsViewModel(
-    private val repository: WordRepository
+    private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(StatisticsUiState())
@@ -33,10 +36,11 @@ class StatisticsViewModel(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
             
-            val total = repository.getTotalCount()
-            val learned = repository.getLearnedCount()
-            val learning = repository.getLearningCount()
-            val review = repository.getReviewCount()
+            val spaceId = spacePreferences.currentSpaceId.first()
+            val total = repository.getTotalCount(spaceId)
+            val learned = repository.getLearnedCount(spaceId)
+            val learning = repository.getLearningCount(spaceId)
+            val review = repository.getReviewCount(spaceId)
             
             // Вычисляем точность (упрощенно)
             val accuracy = if (total > 0) {
@@ -58,12 +62,13 @@ class StatisticsViewModel(
 }
 
 class StatisticsViewModelFactory(
-    private val repository: WordRepository
+    private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(StatisticsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return StatisticsViewModel(repository) as T
+            return StatisticsViewModel(repository, spacePreferences) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

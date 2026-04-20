@@ -49,8 +49,8 @@ class CsvImporter(
         }
         
         val wordsToImport = if (checkDuplicates) {
-            // Получить существующие английские слова из базы
-            val existingEnglishWords = repository.getAllEnglishWords().toSet()
+            // Получить существующие английские слова из базы (из пространства по умолчанию)
+            val existingEnglishWords = repository.getAllEnglishWords(1L).toSet()
             // Фильтровать только новые слова
             words.filter { word -> word.englishWord !in existingEnglishWords }
         } else {
@@ -72,6 +72,7 @@ class CsvImporter(
         
         return if (parts.size >= 2) {
             Word(
+                spaceId = 1L, // Пространство по умолчанию
                 englishWord = parts[0],
                 russianTranslations = parts[1]
             )
@@ -85,6 +86,7 @@ class CsvImporter(
         
         return if (parts.size >= 2) {
             Word(
+                spaceId = 1L, // Пространство по умолчанию
                 englishWord = parts[0],
                 russianTranslations = parts[1],
                 repetitionLevel = parts.getOrNull(2)?.toIntOrNull() ?: 0,
@@ -119,6 +121,6 @@ class CsvImporter(
     }
     
     suspend fun isDataImported(): Boolean {
-        return repository.getTotalCount() > 0
+        return repository.getTotalCount(1L) > 0
     }
 }

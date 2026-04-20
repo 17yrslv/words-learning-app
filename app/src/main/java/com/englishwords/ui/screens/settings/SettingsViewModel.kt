@@ -7,11 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.englishwords.data.csv.CsvExporter
 import com.englishwords.data.csv.CsvImporter
 import com.englishwords.data.preferences.LanguagePreferences
+import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.preferences.ThemePreferences
 import com.englishwords.data.repository.WordRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.InputStream
 import java.io.OutputStream
@@ -19,6 +21,7 @@ import java.io.OutputStream
 class SettingsViewModel(
     private val themePreferences: ThemePreferences,
     private val languagePreferences: LanguagePreferences,
+    private val spacePreferences: SpacePreferences,
     private val wordRepository: WordRepository,
     private val context: Context
 ) : ViewModel() {
@@ -61,7 +64,8 @@ class SettingsViewModel(
         viewModelScope.launch {
             try {
                 _exportImportState.value = ExportImportState.Loading
-                val words = wordRepository.getAllWords()
+                val spaceId = spacePreferences.currentSpaceId.first()
+                val words = wordRepository.getAllWords(spaceId)
                 val count = csvExporter.exportWordsToCsv(words, outputStream)
                 outputStream.close()
                 _exportImportState.value = ExportImportState.Success("Экспортировано слов: $count")
@@ -127,13 +131,14 @@ sealed class ExportImportState {
 class SettingsViewModelFactory(
     private val themePreferences: ThemePreferences,
     private val languagePreferences: LanguagePreferences,
+    private val spacePreferences: SpacePreferences,
     private val wordRepository: WordRepository,
     private val context: Context
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SettingsViewModel(themePreferences, languagePreferences, wordRepository, context) as T
+            return SettingsViewModel(themePreferences, languagePreferences, spacePreferences, wordRepository, context) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

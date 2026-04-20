@@ -18,11 +18,12 @@ import com.englishwords.data.repository.WordRepository
 @Composable
 fun FavoritesScreen(
     repository: WordRepository,
+    spacePreferences: com.englishwords.data.preferences.SpacePreferences,
     strings: com.englishwords.ui.localization.Strings,
     onNavigateBack: () -> Unit
 ) {
     val viewModel: FavoritesViewModel = viewModel(
-        factory = FavoritesViewModelFactory(repository)
+        factory = FavoritesViewModelFactory(repository, spacePreferences)
     )
     val favoriteWords by viewModel.favoriteWords.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()

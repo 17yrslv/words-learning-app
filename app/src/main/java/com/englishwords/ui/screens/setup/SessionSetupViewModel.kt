@@ -2,6 +2,7 @@ package com.englishwords.ui.screens.setup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.repository.WordRepository
 import com.englishwords.domain.model.AnswerType
 import com.englishwords.domain.model.LearningMode
@@ -10,10 +11,12 @@ import com.englishwords.domain.model.SessionMode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SessionSetupViewModel(
-    private val wordRepository: WordRepository
+    private val wordRepository: WordRepository,
+    private val spacePreferences: SpacePreferences
 ) : ViewModel() {
     
     private val _config = MutableStateFlow(SessionConfig())
@@ -43,11 +46,12 @@ class SessionSetupViewModel(
     
     fun updateAvailableWordsCount() {
         viewModelScope.launch {
+            val spaceId = spacePreferences.currentSpaceId.first()
             val count = when (_config.value.sessionMode) {
-                SessionMode.NEW_WORDS -> wordRepository.getNewWordsCount()
-                SessionMode.REVIEW -> wordRepository.getWordsForReviewCount()
-                SessionMode.ALL -> wordRepository.getTotalCount()
-                SessionMode.FAVORITES -> wordRepository.getFavoriteWordsCount()
+                SessionMode.NEW_WORDS -> wordRepository.getNewWordsCount(spaceId)
+                SessionMode.REVIEW -> wordRepository.getWordsForReviewCount(spaceId)
+                SessionMode.ALL -> wordRepository.getTotalCount(spaceId)
+                SessionMode.FAVORITES -> wordRepository.getFavoriteWordsCount(spaceId)
             }
             _availableWordsCount.value = count
             validateSession()
@@ -56,7 +60,8 @@ class SessionSetupViewModel(
     
     fun validateSession(): Boolean {
         viewModelScope.launch {
-            val totalWords = wordRepository.getTotalCount()
+            val spaceId = spacePreferences.currentSpaceId.first()
+            val totalWords = wordRepository.getTotalCount(spaceId)
             val availableWords = _availableWordsCount.value
             val requestedWords = _config.value.wordCount
             
@@ -81,12 +86,13 @@ class SessionSetupViewModel(
 }
 
 class SessionSetupViewModelFactory(
-    private val repository: WordRepository
+    private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences
 ) : androidx.lifecycle.ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SessionSetupViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SessionSetupViewModel(repository) as T
+            return SessionSetupViewModel(repository, spacePreferences) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -27,12 +27,13 @@ import com.englishwords.ui.components.AnimatedButton
 @Composable
 fun SessionSetupScreen(
     repository: com.englishwords.data.repository.WordRepository,
+    spacePreferences: com.englishwords.data.preferences.SpacePreferences,
     strings: com.englishwords.ui.localization.Strings,
     onNavigateBack: () -> Unit,
     onStartLearning: (SessionConfig) -> Unit
 ) {
     val viewModel: SessionSetupViewModel = viewModel(
-        factory = SessionSetupViewModelFactory(repository)
+        factory = SessionSetupViewModelFactory(repository, spacePreferences)
     )
     val config by viewModel.config.collectAsState()
     val validationError by viewModel.validationError.collectAsState()

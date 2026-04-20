@@ -8,6 +8,8 @@ data class Word(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     
+    val spaceId: Long = 1, // ID пространства, к которому принадлежит слово
+    
     val englishWord: String,
     val russianTranslations: String,
     

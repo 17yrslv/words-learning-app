@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.englishwords.data.local.Word
+import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.repository.WordRepository
 import com.englishwords.domain.model.AnswerType
 import com.englishwords.domain.model.LearningMode
@@ -53,6 +54,7 @@ data class LearningUiState(
 
 class LearningViewModel(
     private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences,
     private val config: SessionConfig
 ) : ViewModel() {
     
@@ -60,9 +62,9 @@ class LearningViewModel(
     val uiState: StateFlow<LearningUiState> = _uiState.asStateFlow()
     
     private val checkAnswerUseCase = CheckAnswerUseCase()
-    private val getSessionWordsUseCase = GetSessionWordsUseCase(repository)
+    private val getSessionWordsUseCase = GetSessionWordsUseCase(repository, spacePreferences)
     private val updateWordProgressUseCase = UpdateWordProgressUseCase(repository)
-    private val generateAnswerOptionsUseCase = GenerateAnswerOptionsUseCase(repository)
+    private val generateAnswerOptionsUseCase = GenerateAnswerOptionsUseCase(repository, spacePreferences)
     
     init {
         loadWords()
@@ -283,16 +285,21 @@ class LearningViewModel(
             _uiState.value = state.copy(words = updatedWords)
         }
     }
+    
+    fun finishSessionEarly() {
+        _uiState.value = _uiState.value.copy(sessionComplete = true)
+    }
 }
 
 class LearningViewModelFactory(
     private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences,
     private val config: SessionConfig
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LearningViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return LearningViewModel(repository, config) as T
+            return LearningViewModel(repository, spacePreferences, config) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

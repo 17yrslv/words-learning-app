@@ -15,11 +15,12 @@ import com.englishwords.ui.components.AnimatedButton
 @Composable
 fun AddWordScreen(
     repository: WordRepository,
+    spacePreferences: com.englishwords.data.preferences.SpacePreferences,
     strings: com.englishwords.ui.localization.Strings,
     onNavigateBack: () -> Unit
 ) {
     val viewModel: AddWordViewModel = viewModel(
-        factory = AddWordViewModelFactory(repository)
+        factory = AddWordViewModelFactory(repository, spacePreferences)
     )
     val uiState by viewModel.uiState.collectAsState()
     
@@ -42,21 +43,21 @@ fun AddWordScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Английское слово
+            // Слово
             OutlinedTextField(
                 value = uiState.englishWord,
                 onValueChange = { viewModel.onEnglishWordChange(it) },
-                label = { Text(strings.englishWord) },
+                label = { Text(strings.word) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 enabled = !uiState.isSaving
             )
             
-            // Русские переводы
+            // Перевод
             OutlinedTextField(
                 value = uiState.russianTranslations,
                 onValueChange = { viewModel.onRussianTranslationsChange(it) },
-                label = { Text(strings.russianTranslations) },
+                label = { Text(strings.translation) },
                 supportingText = { Text(strings.separateByComma) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 2,

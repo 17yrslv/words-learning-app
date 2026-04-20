@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.englishwords.data.local.Word
+import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.repository.WordRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class AddWordUiState(
@@ -19,7 +21,8 @@ data class AddWordUiState(
 )
 
 class AddWordViewModel(
-    private val repository: WordRepository
+    private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(AddWordUiState())
@@ -50,7 +53,9 @@ class AddWordViewModel(
             _uiState.value = state.copy(isSaving = true)
             
             try {
+                val spaceId = spacePreferences.currentSpaceId.first()
                 val word = Word(
+                    spaceId = spaceId,
                     englishWord = state.englishWord.trim(),
                     russianTranslations = state.russianTranslations.trim()
                 )
@@ -73,12 +78,13 @@ class AddWordViewModel(
 }
 
 class AddWordViewModelFactory(
-    private val repository: WordRepository
+    private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AddWordViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return AddWordViewModel(repository) as T
+            return AddWordViewModel(repository, spacePreferences) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

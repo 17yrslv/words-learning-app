@@ -58,8 +58,8 @@ data class Strings(
     
     // Add Word Screen
     val addWordTitle: String,
-    val englishWord: String,
-    val russianTranslations: String,
+    val word: String,
+    val translation: String,
     val separateByComma: String,
     
     // Statistics Screen
@@ -100,7 +100,12 @@ data class Strings(
     // Favorites Screen
     val favorites: String,
     val noFavorites: String,
-    val removeFromFavorites: String
+    val removeFromFavorites: String,
+    
+    // Finish Session Dialog
+    val finishSession: String,
+    val finishSessionMessage: String,
+    val finishSessionConfirm: String
 )
 
 val EnglishStrings = Strings(
@@ -161,8 +166,8 @@ val EnglishStrings = Strings(
     
     // Add Word Screen
     addWordTitle = "Add Word",
-    englishWord = "English word",
-    russianTranslations = "Russian translations",
+    word = "Word",
+    translation = "Translation",
     separateByComma = "Separate by comma",
     
     // Statistics Screen
@@ -203,7 +208,12 @@ val EnglishStrings = Strings(
     // Favorites Screen
     favorites = "Favorites",
     noFavorites = "No favorite words yet",
-    removeFromFavorites = "Remove from favorites"
+    removeFromFavorites = "Remove from favorites",
+    
+    // Finish Session Dialog
+    finishSession = "Finish Session",
+    finishSessionMessage = "Are you sure you want to finish the session early? Your progress will be saved.",
+    finishSessionConfirm = "Finish"
 )
 
 val RussianStrings = Strings(
@@ -264,8 +274,8 @@ val RussianStrings = Strings(
     
     // Add Word Screen
     addWordTitle = "Добавить слово",
-    englishWord = "Английское слово",
-    russianTranslations = "Русские переводы",
+    word = "Слово",
+    translation = "Перевод",
     separateByComma = "Через запятую",
     
     // Statistics Screen
@@ -306,7 +316,12 @@ val RussianStrings = Strings(
     // Favorites Screen
     favorites = "Избранные",
     noFavorites = "Нет избранных слов",
-    removeFromFavorites = "Убрать из избранного"
+    removeFromFavorites = "Убрать из избранного",
+    
+    // Finish Session Dialog
+    finishSession = "Завершить сессию",
+    finishSessionMessage = "Вы уверены, что хотите завершить сессию досрочно? Ваш прогресс будет сохранён.",
+    finishSessionConfirm = "Завершить"
 )
 
 fun getStrings(language: String): Strings {

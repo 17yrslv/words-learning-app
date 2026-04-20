@@ -27,15 +27,17 @@ import com.englishwords.ui.components.AnimatedButton
 @Composable
 fun LearningScreen(
     repository: WordRepository,
+    spacePreferences: com.englishwords.data.preferences.SpacePreferences,
     config: SessionConfig,
     strings: com.englishwords.ui.localization.Strings,
     onNavigateBack: () -> Unit,
     onSessionComplete: (SessionResult) -> Unit
 ) {
     val viewModel: LearningViewModel = viewModel(
-        factory = LearningViewModelFactory(repository, config)
+        factory = LearningViewModelFactory(repository, spacePreferences, config)
     )
     val uiState by viewModel.uiState.collectAsState()
+    var showFinishDialog by remember { mutableStateOf(false) }
     
     LaunchedEffect(uiState.sessionComplete) {
         if (uiState.sessionComplete) {
@@ -62,10 +64,26 @@ fun LearningScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.Close, contentDescription = strings.exit)
                     }
+                },
+                actions = {
+                    TextButton(onClick = { showFinishDialog = true }) {
+                        Text(strings.finishSession)
+                    }
                 }
             )
         }
     ) { paddingValues ->
+        if (showFinishDialog) {
+            FinishSessionDialog(
+                strings = strings,
+                onDismiss = { showFinishDialog = false },
+                onConfirm = {
+                    showFinishDialog = false
+                    viewModel.finishSessionEarly()
+                }
+            )
+        }
+        
         if (uiState.isLoading) {
             Box(
                 modifier = Modifier
@@ -179,4 +197,31 @@ fun LearningScreen(
             }
         }
     }
+}
+
+@Composable
+fun FinishSessionDialog(
+    strings: com.englishwords.ui.localization.Strings,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = strings.finishSession)
+        },
+        text = {
+            Text(text = strings.finishSessionMessage)
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(strings.finishSessionConfirm)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(strings.cancel)
+            }
+        }
+    )
 }

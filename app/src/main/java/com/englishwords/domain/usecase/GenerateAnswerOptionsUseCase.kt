@@ -1,11 +1,14 @@
 package com.englishwords.domain.usecase
 
 import com.englishwords.data.local.Word
+import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.repository.WordRepository
 import com.englishwords.domain.model.LearningMode
+import kotlinx.coroutines.flow.first
 
 class GenerateAnswerOptionsUseCase(
-    private val repository: WordRepository
+    private val repository: WordRepository,
+    private val spacePreferences: SpacePreferences
 ) {
     
     suspend fun execute(
@@ -25,7 +28,8 @@ class GenerateAnswerOptionsUseCase(
         }
         
         // Получаем 3 случайных слова (исключая текущее)
-        val randomWords = repository.getRandomWordsExcluding(currentWord.id, 3)
+        val spaceId = spacePreferences.currentSpaceId.first()
+        val randomWords = repository.getRandomWordsExcluding(spaceId, currentWord.id, 3)
         
         // Формируем неправильные варианты
         val wrongAnswers = randomWords.map { word ->
