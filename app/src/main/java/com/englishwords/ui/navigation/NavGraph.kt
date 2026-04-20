@@ -1,5 +1,10 @@
 package com.englishwords.ui.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +29,24 @@ import com.englishwords.ui.screens.statistics.StatisticsScreen
 import com.englishwords.ui.screens.settings.SettingsScreen
 import com.englishwords.ui.screens.favorites.FavoritesScreen
 
+// Быстрые и плавные анимации переходов
+private const val TRANSITION_DURATION = 200
+private const val FADE_DURATION = 150
+
+private val enterTransition = slideInHorizontally(
+    initialOffsetX = { it / 3 },
+    animationSpec = tween(TRANSITION_DURATION)
+) + fadeIn(animationSpec = tween(FADE_DURATION))
+
+private val exitTransition = fadeOut(animationSpec = tween(FADE_DURATION))
+
+private val popEnterTransition = fadeIn(animationSpec = tween(FADE_DURATION))
+
+private val popExitTransition = slideOutHorizontally(
+    targetOffsetX = { it / 3 },
+    animationSpec = tween(TRANSITION_DURATION)
+) + fadeOut(animationSpec = tween(FADE_DURATION))
+
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -41,7 +64,11 @@ fun NavGraph(
         navController = navController,
         startDestination = Screen.Home.route
     ) {
-        composable(Screen.Home.route) {
+        composable(
+            route = Screen.Home.route,
+            enterTransition = { popEnterTransition },
+            exitTransition = { exitTransition }
+        ) {
             HomeScreen(
                 repository = repository,
                 themePreferences = themePreferences,
@@ -66,7 +93,13 @@ fun NavGraph(
             )
         }
         
-        composable(Screen.SessionSetup.route) {
+        composable(
+            route = Screen.SessionSetup.route,
+            enterTransition = { enterTransition },
+            exitTransition = { exitTransition },
+            popEnterTransition = { popEnterTransition },
+            popExitTransition = { popExitTransition }
+        ) {
             SessionSetupScreen(
                 repository = repository,
                 spacePreferences = spacePreferences,
@@ -81,7 +114,13 @@ fun NavGraph(
             )
         }
         
-        composable(Screen.Learning.route) {
+        composable(
+            route = Screen.Learning.route,
+            enterTransition = { enterTransition },
+            exitTransition = { exitTransition },
+            popEnterTransition = { popEnterTransition },
+            popExitTransition = { popExitTransition }
+        ) {
             LearningScreen(
                 repository = repository,
                 spacePreferences = spacePreferences,
@@ -99,7 +138,13 @@ fun NavGraph(
             )
         }
         
-        composable(Screen.SessionResult.route) {
+        composable(
+            route = Screen.SessionResult.route,
+            enterTransition = { enterTransition },
+            exitTransition = { exitTransition },
+            popEnterTransition = { popEnterTransition },
+            popExitTransition = { popExitTransition }
+        ) {
             SessionResultScreen(
                 result = sessionResult,
                 repository = repository,
@@ -115,7 +160,13 @@ fun NavGraph(
             )
         }
         
-        composable(Screen.AddWord.route) {
+        composable(
+            route = Screen.AddWord.route,
+            enterTransition = { enterTransition },
+            exitTransition = { exitTransition },
+            popEnterTransition = { popEnterTransition },
+            popExitTransition = { popExitTransition }
+        ) {
             AddWordScreen(
                 repository = repository,
                 spacePreferences = spacePreferences,
@@ -126,7 +177,13 @@ fun NavGraph(
             )
         }
         
-        composable(Screen.Statistics.route) {
+        composable(
+            route = Screen.Statistics.route,
+            enterTransition = { enterTransition },
+            exitTransition = { exitTransition },
+            popEnterTransition = { popEnterTransition },
+            popExitTransition = { popExitTransition }
+        ) {
             StatisticsScreen(
                 repository = repository,
                 spacePreferences = spacePreferences,
@@ -137,7 +194,13 @@ fun NavGraph(
             )
         }
         
-        composable(Screen.Settings.route) {
+        composable(
+            route = Screen.Settings.route,
+            enterTransition = { enterTransition },
+            exitTransition = { exitTransition },
+            popEnterTransition = { popEnterTransition },
+            popExitTransition = { popExitTransition }
+        ) {
             SettingsScreen(
                 themePreferences = themePreferences,
                 languagePreferences = languagePreferences,
@@ -150,7 +213,13 @@ fun NavGraph(
             )
         }
         
-        composable(Screen.Favorites.route) {
+        composable(
+            route = Screen.Favorites.route,
+            enterTransition = { enterTransition },
+            exitTransition = { exitTransition },
+            popEnterTransition = { popEnterTransition },
+            popExitTransition = { popExitTransition }
+        ) {
             FavoritesScreen(
                 repository = repository,
                 spacePreferences = spacePreferences,

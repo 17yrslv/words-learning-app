@@ -3,6 +3,7 @@ package com.englishwords.ui.screens.learning
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.englishwords.data.local.Space
 import com.englishwords.data.local.Word
 import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.repository.WordRepository
@@ -18,6 +19,7 @@ import com.englishwords.domain.usecase.UpdateWordProgressUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 enum class AnswerState {
@@ -40,7 +42,8 @@ data class LearningUiState(
     val currentMode: LearningMode = LearningMode.EN_TO_RU,
     val answerOptions: List<String> = emptyList(),
     val selectedOption: String? = null,
-    val correctOption: String? = null
+    val correctOption: String? = null,
+    val currentSpace: Space? = null
 ) {
     val currentWord: Word?
         get() = words.getOrNull(currentIndex)
@@ -68,6 +71,15 @@ class LearningViewModel(
     
     init {
         loadWords()
+        loadCurrentSpace()
+    }
+    
+    private fun loadCurrentSpace() {
+        viewModelScope.launch {
+            val spaceId = spacePreferences.currentSpaceId.first()
+            val space = repository.getSpaceById(spaceId)
+            _uiState.value = _uiState.value.copy(currentSpace = space)
+        }
     }
     
     private fun loadWords() {

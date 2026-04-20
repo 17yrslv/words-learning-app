@@ -38,6 +38,9 @@ fun SessionSetupScreen(
     val config by viewModel.config.collectAsState()
     val validationError by viewModel.validationError.collectAsState()
     val availableWordsCount by viewModel.availableWordsCount.collectAsState()
+    val currentSpace by viewModel.currentSpace.collectAsState()
+    
+    val shortName = currentSpace?.shortName?.ifEmpty { "EN" } ?: "EN"
     
     LaunchedEffect(config.sessionMode) {
         viewModel.updateAvailableWordsCount()
@@ -75,12 +78,12 @@ fun SessionSetupScreen(
             
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 LearningModeOption(
-                    text = strings.enToRu,
+                    text = "$shortName → RU",
                     selected = config.learningMode == LearningMode.EN_TO_RU,
                     onClick = { viewModel.setLearningMode(LearningMode.EN_TO_RU) }
                 )
                 LearningModeOption(
-                    text = strings.ruToEn,
+                    text = "RU → $shortName",
                     selected = config.learningMode == LearningMode.RU_TO_EN,
                     onClick = { viewModel.setLearningMode(LearningMode.RU_TO_EN) }
                 )

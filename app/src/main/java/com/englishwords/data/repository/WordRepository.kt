@@ -103,8 +103,8 @@ class WordRepository(
         return spaceDao.getSpaceById(id)
     }
     
-    suspend fun createSpace(name: String): Long {
-        val space = Space(name = name)
+    suspend fun createSpace(name: String, shortName: String): Long {
+        val space = Space(name = name, shortName = shortName)
         return spaceDao.insert(space)
     }
     

@@ -2,6 +2,7 @@ package com.englishwords.ui.screens.setup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.englishwords.data.local.Space
 import com.englishwords.data.preferences.SpacePreferences
 import com.englishwords.data.repository.WordRepository
 import com.englishwords.domain.model.AnswerType
@@ -27,6 +28,21 @@ class SessionSetupViewModel(
     
     private val _availableWordsCount = MutableStateFlow(0)
     val availableWordsCount: StateFlow<Int> = _availableWordsCount.asStateFlow()
+    
+    private val _currentSpace = MutableStateFlow<Space?>(null)
+    val currentSpace: StateFlow<Space?> = _currentSpace.asStateFlow()
+    
+    init {
+        loadCurrentSpace()
+    }
+    
+    private fun loadCurrentSpace() {
+        viewModelScope.launch {
+            val spaceId = spacePreferences.currentSpaceId.first()
+            val space = wordRepository.getSpaceById(spaceId)
+            _currentSpace.value = space
+        }
+    }
     
     fun setWordCount(count: Int) {
         _config.value = _config.value.copy(wordCount = count)

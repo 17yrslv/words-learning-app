@@ -217,6 +217,7 @@ fun HomeScreen(
     // Диалог создания нового пространства
     if (uiState.showCreateSpaceDialog) {
         var spaceName by remember { mutableStateOf("") }
+        var shortName by remember { mutableStateOf("") }
         
         AlertDialog(
             onDismissRequest = { viewModel.hideCreateSpaceDialog() },
@@ -232,17 +233,32 @@ fun HomeScreen(
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth()
                     )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("Короткое название (2-3 буквы, например IT, ES):")
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = shortName,
+                        onValueChange = { 
+                            if (it.length <= 3) {
+                                shortName = it.uppercase()
+                            }
+                        },
+                        label = { Text("Короткое название") },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             },
             confirmButton = {
                 TextButton(
                     onClick = { 
-                        if (spaceName.isNotBlank()) {
-                            viewModel.createSpace(spaceName.trim())
+                        if (spaceName.isNotBlank() && shortName.isNotBlank() && shortName.length >= 2) {
+                            viewModel.createSpace(spaceName.trim(), shortName.trim())
                             spaceName = ""
+                            shortName = ""
                         }
                     },
-                    enabled = spaceName.isNotBlank()
+                    enabled = spaceName.isNotBlank() && shortName.isNotBlank() && shortName.length >= 2
                 ) {
                     Text("Создать")
                 }

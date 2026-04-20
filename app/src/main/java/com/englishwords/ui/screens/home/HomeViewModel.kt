@@ -154,9 +154,9 @@ class HomeViewModel(
         }
     }
     
-    fun createSpace(name: String) {
+    fun createSpace(name: String, shortName: String) {
         viewModelScope.launch {
-            val spaceId = repository.createSpace(name)
+            val spaceId = repository.createSpace(name, shortName)
             hideCreateSpaceDialog()
             
             // Автоматически переключаемся на новое пространство

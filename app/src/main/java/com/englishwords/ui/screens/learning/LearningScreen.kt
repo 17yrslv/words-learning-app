@@ -112,9 +112,10 @@ fun LearningScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 
                 // Карточка со словом
+                val shortName = uiState.currentSpace?.shortName?.ifEmpty { "EN" } ?: "EN"
                 val modeText = when (uiState.currentMode) {
-                    LearningMode.EN_TO_RU -> "EN → RU"
-                    LearningMode.RU_TO_EN -> "RU → EN"
+                    LearningMode.EN_TO_RU -> "$shortName → RU"
+                    LearningMode.RU_TO_EN -> "RU → $shortName"
                     else -> ""
                 }
                 

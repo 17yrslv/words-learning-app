@@ -9,5 +9,6 @@ data class Space(
     val id: Long = 0,
     
     val name: String,
+    val shortName: String = "",
     val createdAt: Long = System.currentTimeMillis()
 )
